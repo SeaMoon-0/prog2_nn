@@ -64,11 +64,11 @@ learning_rate=1e-3
 optimazer=torch.optim.SGD(model.parameters(),lr=learning_rate)
 
 
-model.train(model,dataloader_train,loss_fn,optimazer)
+#models.train(model,dataloader_train,loss_fn,optimazer)
 
 #精度の計算
-acc_train=model.test_accuracy(model,dataloader_train)
-print(f'test:{acc_train*100:.2f}%')
+#acc_train=model.test_accuracy(model,dataloader_train)
+#print(f'test:{acc_train*100:.2f}%')
 
 n_epochs=5
 
@@ -82,21 +82,29 @@ for k in range(n_epochs):
     print(f'epoch{k+1}/{n_epochs}',end=':',flush=True)
 
 
+    loss_train=models.test(model,dataloader_train,loss_fn)
     loss_train_history.append(loss_train)
     print(f'train loss:{loss_train:3f}',end=', ')
 
+    time_start=time.time()
     loss_test=models.test(model,dataloader_test,loss_fn)
+    time_end=time.time()
     loss_test_history.append(loss_test)
-    print(f'test loss:{loss_test:3f}',end=', ')
+    print(f'test loss:{loss_test:3f}({time_end-time_start:1f}s)',end=', ')
 
-    #精度計算
-    acc_train=models.test_accuracy(model,dataloader_train)
-    acc_train_history.append(acc_train)
-    print(f'train accuracy:{acc_train*100:3f}%',end=', ')
+    if(k+1)%5==0:
+        #精度計算
+        time_start=time.time()
+        acc_train=models.test_accuracy(model,dataloader_train)
+        time_end=time.time()
+        acc_train_history.append(acc_train)
+        print(f'train accuracy:{acc_train*100:3f}%({time_end-time_start:1f}s)',end=', ')
 
-    acc_test=models.test_accuracy(model,dataloader_test)
-    acc_test_history.append(acc_test)
-    print(f'test accuracy:{acc_test*100:3f}%',end=', ')
+        time_start=time.time()
+        acc_test=models.test_accuracy(model,dataloader_test)
+        time_end=time.time()
+        acc_test_history.append(acc_test)
+        print(f'test accuracy:{acc_test*100:3f}%({time_end-time_start:1f}s)',end=', ')
 
 
 
