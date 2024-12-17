@@ -22,7 +22,7 @@ class MyModel (nn.Module):
 def test_accuracy(model,dataloader,device='cpu'):
         n_corrects=0
 
-        model.to(device)
+        model=model.to(device)
 
         model.eval()
         for image_batch,label_batch in dataloader:
