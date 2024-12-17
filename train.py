@@ -1,5 +1,5 @@
 import time
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import torch
 from torchvision import datasets
 import torchvision.transforms.v2 as transforms
