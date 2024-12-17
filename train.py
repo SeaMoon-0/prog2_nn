@@ -7,6 +7,10 @@ import models
 model=models.MyModel()
 
 
+device='cuda'if torch.cuda.is_available() else 'cpu'
+
+
+
 ds_transform=transforms.Compose([
     transforms.ToImage(),
     transforms.ToDtype(torch.float32,scale=True)
@@ -50,9 +54,10 @@ for image_batch,label_batch,in dataloader_test:
 
 
 
-#acc_train=models.train_accuracy(model,dataloader_train)
+acc_train=models.test_accuracy(model,dataloader_train,device=device)
 #print(f'test:{acc_test*100:.3f}%')
-
+acc_test=models.test_accuracy(model,dataloader_test,device=device)
+#print(f'test:{acc_test*100:.3f}%')
 
 
 
@@ -87,7 +92,7 @@ for k in range(n_epochs):
     print(f'train loss:{loss_train:3f}',end=', ')
 
     time_start=time.time()
-    loss_test=models.test(model,dataloader_test,loss_fn)
+    loss_test=models.test(model,dataloader_test,loss_fn,device=device)
     time_end=time.time()
     loss_test_history.append(loss_test)
     print(f'test loss:{loss_test:3f}({time_end-time_start:1f}s)',end=', ')
@@ -95,13 +100,13 @@ for k in range(n_epochs):
     if(k+1)%5==0:
         #精度計算
         time_start=time.time()
-        acc_train=models.test_accuracy(model,dataloader_train)
+        acc_train=models.test_accuracy(model,dataloader_train,device=device)
         time_end=time.time()
         acc_train_history.append(acc_train)
         print(f'train accuracy:{acc_train*100:3f}%({time_end-time_start:1f}s)',end=', ')
 
         time_start=time.time()
-        acc_test=models.test_accuracy(model,dataloader_test)
+        acc_test=models.test_accuracy(model,dataloader_test,device=device)
         time_end=time.time()
         acc_test_history.append(acc_test)
         print(f'test accuracy:{acc_test*100:3f}%({time_end-time_start:1f}s)',end=', ')
